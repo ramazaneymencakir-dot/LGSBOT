@@ -454,6 +454,11 @@ st.markdown(
 )
 
 st.markdown(
+    '<div class="subtitle">Ramazan Eymen ÇAKIR</div>',
+    unsafe_allow_html=True
+)
+
+st.markdown(
     '<div class="subtitle">Kişisel LGS Çalışma Merkezi • Gemini destekli</div>',
     unsafe_allow_html=True
 )
@@ -503,10 +508,29 @@ konu = st.selectbox(
 
 
 # =========================================================
+# ZORLUK
+# =========================================================
+
+st.markdown("### 3️⃣ Zorluk seviyesini seç")
+
+zorluk = st.selectbox(
+    "Zorluk",
+    [
+        "Kolay",
+        "Orta",
+        "Zor",
+        "Gerçek LGS Seviyesi"
+    ],
+    index=1,
+    label_visibility="collapsed"
+)
+
+
+# =========================================================
 # SORU TÜRÜ
 # =========================================================
 
-st.markdown("### 3️⃣ Soru türünü seç")
+st.markdown("### 4️⃣ Soru türünü seç")
 
 c1, c2 = st.columns(2)
 
