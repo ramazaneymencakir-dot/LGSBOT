@@ -539,11 +539,12 @@ if klasik:
         try:
 
           st.session_state.soru = guvenli_soru_uret(
-              st.session_state.ders,
-              konu,
-              "Klasik",
-              zorluk
-          )
+    st.session_state.ders,
+    konu,
+    "Klasik",
+    zorluk
+)
+            )
 
         except Exception as e:
 
@@ -562,11 +563,12 @@ if lgs:
         try:
 
            st.session_state.soru = guvenli_soru_uret(
-               st.session_state.ders,
-               konu,
-               "LGS Tarzı",
-               zorluk
-           )
+    st.session_state.ders,
+    konu,
+    "LGS Tarzı",
+    zorluk
+)
+            )
 
         except Exception as e:
 
