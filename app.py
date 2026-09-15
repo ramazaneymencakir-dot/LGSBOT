@@ -16,6 +16,7 @@ st.markdown("""
 .block-container { max-width:1150px; padding-top:2rem; }
 .title { text-align:center; font-size:55px; font-weight:900; }
 .subtitle { text-align:center; color:#afbed1; font-size:18px; margin-bottom:12px; }
+.founder { text-align:center; color:#ffffff; font-size:22px; font-weight:900; letter-spacing:1px; margin:8px 0 12px; }
 .question { padding:25px; border-radius:20px; background:rgba(255,255,255,.06);
     border:1px solid rgba(255,255,255,.15); font-size:18px; line-height:1.7; }
 .answer { padding:20px; border-radius:16px; background:rgba(20,160,90,.12);
@@ -91,7 +92,7 @@ def soru_getir(tur, konu, zorluk):
         st.info("Bu zorluk seviyesinde henüz soru yok; aynı konudan mevcut başka bir zorluk getirildi.")
 
 st.markdown('<div class="title">🤖 LGSBOT</div>', unsafe_allow_html=True)
-st.markdown('<div class="subtitle">Ramazan Eymen ÇAKIR</div>', unsafe_allow_html=True)
+st.markdown('<div class="founder">KURUCU: RAMAZAN EYMEN ÇAKIR</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Kişisel LGS Çalışma Merkezi • Soru Bankası Sürümü</div>', unsafe_allow_html=True)
 st.info(f"📚 Bankada {len(BANKA)} soru var. Bu sürüm soru çözerken Gemini API kullanmaz; 429 kota hatası oluşturmaz.")
 
