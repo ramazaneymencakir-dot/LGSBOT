@@ -1,5 +1,6 @@
 [
   {
+    "id": "LGS-0001",
     "ders": "📐 Matematik",
     "konu": "Çarpanlar ve Katlar",
     "zorluk": "Kolay",
@@ -14,6 +15,7 @@
     "ipucu": "EBOB'da ortak asal çarpanların küçük üslerini al."
   },
   {
+    "id": "LGS-0002",
     "ders": "📐 Matematik",
     "konu": "Çarpanlar ve Katlar",
     "zorluk": "Orta",
@@ -28,6 +30,7 @@
     "ipucu": "Eş gruplara en fazla sayıda ayırmada EBOB düşün."
   },
   {
+    "id": "LGS-0003",
     "ders": "📐 Matematik",
     "konu": "Çarpanlar ve Katlar",
     "zorluk": "Zor",
@@ -42,6 +45,7 @@
     "ipucu": "Önce grup sayısını EBOB ile bul."
   },
   {
+    "id": "LGS-0004",
     "ders": "📐 Matematik",
     "konu": "Çarpanlar ve Katlar",
     "zorluk": "Gerçek LGS Seviyesi",
@@ -56,6 +60,7 @@
     "ipucu": "Periyodik tekrar sorularında EKOK düşün."
   },
   {
+    "id": "LGS-0005",
     "ders": "📐 Matematik",
     "konu": "Üslü İfadeler",
     "zorluk": "Kolay",
@@ -70,6 +75,7 @@
     "ipucu": "Aynı tabanda çarpma varsa üsleri topla."
   },
   {
+    "id": "LGS-0006",
     "ders": "📐 Matematik",
     "konu": "Üslü İfadeler",
     "zorluk": "Orta",
@@ -84,6 +90,7 @@
     "ipucu": "Aynı tabanda bölmede üsleri çıkar."
   },
   {
+    "id": "LGS-0007",
     "ders": "📐 Matematik",
     "konu": "Üslü İfadeler",
     "zorluk": "Zor",
@@ -98,6 +105,7 @@
     "ipucu": "Bölmede üsler çıkarılır."
   },
   {
+    "id": "LGS-0008",
     "ders": "📐 Matematik",
     "konu": "Üslü İfadeler",
     "zorluk": "Gerçek LGS Seviyesi",
@@ -112,6 +120,7 @@
     "ipucu": "Katlanarak artışı üslü ifadeyle modelle."
   },
   {
+    "id": "LGS-0009",
     "ders": "🧪 Fen Bilimleri",
     "konu": "DNA ve Genetik Kod",
     "zorluk": "Kolay",
@@ -126,6 +135,7 @@
     "ipucu": "Gen, DNA'nın görev birimidir."
   },
   {
+    "id": "LGS-0010",
     "ders": "🧪 Fen Bilimleri",
     "konu": "DNA ve Genetik Kod",
     "zorluk": "Orta",
@@ -140,6 +150,7 @@
     "ipucu": "Modifikasyonda DNA dizisi değişmez."
   },
   {
+    "id": "LGS-0011",
     "ders": "🧪 Fen Bilimleri",
     "konu": "DNA ve Genetik Kod",
     "zorluk": "Zor",
@@ -154,6 +165,7 @@
     "ipucu": "Çevresel etki ve kalıtsal olmama modifikasyonu gösterir."
   },
   {
+    "id": "LGS-0012",
     "ders": "🧪 Fen Bilimleri",
     "konu": "DNA ve Genetik Kod",
     "zorluk": "Gerçek LGS Seviyesi",
@@ -168,6 +180,7 @@
     "ipucu": "Değişkenleri ayır: genetik yapı sabit, sıcaklık değişken."
   },
   {
+    "id": "LGS-0013",
     "ders": "🧪 Fen Bilimleri",
     "konu": "Basınç",
     "zorluk": "Kolay",
@@ -182,6 +195,7 @@
     "ipucu": "Alan küçülürse basınç artar."
   },
   {
+    "id": "LGS-0014",
     "ders": "🧪 Fen Bilimleri",
     "konu": "Basınç",
     "zorluk": "Orta",
@@ -196,6 +210,7 @@
     "ipucu": "Aynı ağırlıkta küçük temas alanı daha büyük basınç yapar."
   },
   {
+    "id": "LGS-0015",
     "ders": "🧪 Fen Bilimleri",
     "konu": "Basınç",
     "zorluk": "Zor",
@@ -210,6 +225,7 @@
     "ipucu": "Sıvı basıncında taban alanı değil derinlik önemlidir."
   },
   {
+    "id": "LGS-0016",
     "ders": "🧪 Fen Bilimleri",
     "konu": "Basınç",
     "zorluk": "Gerçek LGS Seviyesi",
@@ -224,6 +240,7 @@
     "ipucu": "Aynı sıvı + aynı derinlik = aynı basınç."
   },
   {
+    "id": "LGS-0017",
     "ders": "📖 Türkçe",
     "konu": "Paragrafta Anlam",
     "zorluk": "Kolay",
@@ -238,6 +255,7 @@
     "ipucu": "Ana düşünce, paragrafın tamamını kapsar."
   },
   {
+    "id": "LGS-0018",
     "ders": "📖 Türkçe",
     "konu": "Paragrafta Anlam",
     "zorluk": "Orta",
@@ -252,6 +270,7 @@
     "ipucu": "Çıkarım, metnin desteklediği sonuçtur."
   },
   {
+    "id": "LGS-0019",
     "ders": "📖 Türkçe",
     "konu": "Paragrafta Anlam",
     "zorluk": "Zor",
@@ -266,6 +285,7 @@
     "ipucu": "Örneklerin bağlandığı ortak düşünceyi bul."
   },
   {
+    "id": "LGS-0020",
     "ders": "📖 Türkçe",
     "konu": "Paragrafta Anlam",
     "zorluk": "Gerçek LGS Seviyesi",
@@ -280,6 +300,7 @@
     "ipucu": "Yazarın olumladığı davranışı bul."
   },
   {
+    "id": "LGS-0021",
     "ders": "📖 Türkçe",
     "konu": "Fiilimsiler",
     "zorluk": "Kolay",
@@ -294,6 +315,7 @@
     "ipucu": "-arak/-erek zarf-fiil ekidir."
   },
   {
+    "id": "LGS-0022",
     "ders": "📖 Türkçe",
     "konu": "Fiilimsiler",
     "zorluk": "Orta",
@@ -308,6 +330,7 @@
     "ipucu": "-ma/-me isim-fiil eklerinden biridir."
   },
   {
+    "id": "LGS-0023",
     "ders": "📖 Türkçe",
     "konu": "Fiilimsiler",
     "zorluk": "Zor",
@@ -322,6 +345,7 @@
     "ipucu": "Fiilimsinin görevini ve ekini birlikte kontrol et."
   },
   {
+    "id": "LGS-0024",
     "ders": "📖 Türkçe",
     "konu": "Fiilimsiler",
     "zorluk": "Gerçek LGS Seviyesi",
@@ -336,6 +360,7 @@
     "ipucu": "Çekimli fiilleri fiilimsi sanma."
   },
   {
+    "id": "LGS-0025",
     "ders": "🇹🇷 İnkılap Tarihi",
     "konu": "Millî Uyanış",
     "zorluk": "Kolay",
@@ -350,6 +375,7 @@
     "ipucu": "Kuvâ-yı Milliye düzenli ordu öncesi yerel direniştir."
   },
   {
+    "id": "LGS-0026",
     "ders": "🇹🇷 İnkılap Tarihi",
     "konu": "Millî Uyanış",
     "zorluk": "Orta",
@@ -364,6 +390,7 @@
     "ipucu": "Milletin iradesi = millî egemenlik."
   },
   {
+    "id": "LGS-0027",
     "ders": "🇹🇷 İnkılap Tarihi",
     "konu": "Millî Uyanış",
     "zorluk": "Zor",
@@ -378,6 +405,7 @@
     "ipucu": "Karardaki anahtar ifadeyi amaçla eşleştir."
   },
   {
+    "id": "LGS-0028",
     "ders": "🇹🇷 İnkılap Tarihi",
     "konu": "Millî Uyanış",
     "zorluk": "Gerçek LGS Seviyesi",
@@ -392,6 +420,7 @@
     "ipucu": "Gerekçe-yöntem-amaç ilişkisini birlikte değerlendir."
   },
   {
+    "id": "LGS-0029",
     "ders": "🇹🇷 İnkılap Tarihi",
     "konu": "Atatürkçülük ve Çağdaşlaşan Türkiye",
     "zorluk": "Kolay",
@@ -406,6 +435,7 @@
     "ipucu": "Millî egemenlik = Cumhuriyetçilik."
   },
   {
+    "id": "LGS-0030",
     "ders": "🇹🇷 İnkılap Tarihi",
     "konu": "Atatürkçülük ve Çağdaşlaşan Türkiye",
     "zorluk": "Orta",
@@ -420,6 +450,7 @@
     "ipucu": "Tevhid-i Tedrisat = öğretimde birlik."
   },
   {
+    "id": "LGS-0031",
     "ders": "🇹🇷 İnkılap Tarihi",
     "konu": "Atatürkçülük ve Çağdaşlaşan Türkiye",
     "zorluk": "Zor",
@@ -434,6 +465,7 @@
     "ipucu": "Birden fazla inkılabın ortak amacını bul."
   },
   {
+    "id": "LGS-0032",
     "ders": "🇹🇷 İnkılap Tarihi",
     "konu": "Atatürkçülük ve Çağdaşlaşan Türkiye",
     "zorluk": "Gerçek LGS Seviyesi",
