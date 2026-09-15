@@ -57,9 +57,26 @@ for key, default in {
     "cevap_acik": False,
     "cozum_acik": False,
     "son_soru_metni": None,
+    "cevaplandi": False,
+    "soru_no": 0,
+    "dogru": 0,
+    "yanlis": 0,
+    "yanlislarim": [],
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default
+
+def soruyu_temizle():
+    st.session_state.soru = None
+    st.session_state.cevap_acik = False
+    st.session_state.cozum_acik = False
+    st.session_state.cevaplandi = False
+
+def secim_degisti():
+    soruyu_temizle()
+
+def konu_soru_sayisi(ders, konu):
+    return sum(1 for q in BANKA if q.get("ders") == ders and q.get("konu") == konu)
 
 def uygun_sorular(ders, konu, zorluk, tur):
     exact = [q for q in BANKA if q.get("ders")==ders and q.get("konu")==konu
@@ -88,6 +105,8 @@ def soru_getir(tur, konu, zorluk):
     st.session_state.soru = rastgele_soru_sec(liste)
     st.session_state.cevap_acik = False
     st.session_state.cozum_acik = False
+    st.session_state.cevaplandi = False
+    st.session_state.soru_no += 1
     if fallback:
         st.info("Bu zorluk seviyesinde henüz soru yok; aynı konudan mevcut başka bir zorluk getirildi.")
 
@@ -96,24 +115,49 @@ st.markdown('<div class="founder">KURUCU: RAMAZAN EYMEN ÇAKIR</div>', unsafe_al
 st.markdown('<div class="subtitle">Kişisel LGS Çalışma Merkezi • Soru Bankası Sürümü</div>', unsafe_allow_html=True)
 st.info(f"📚 Bankada {len(BANKA)} soru var. Bu sürüm soru çözerken Gemini API kullanmaz; 429 kota hatası oluşturmaz.")
 
+cozulen = st.session_state.dogru + st.session_state.yanlis
+basari = (st.session_state.dogru / cozulen * 100) if cozulen else 0
+m1, m2, m3, m4 = st.columns(4)
+m1.metric("✅ Doğru", st.session_state.dogru)
+m2.metric("❌ Yanlış", st.session_state.yanlis)
+m3.metric("📝 Çözülen", cozulen)
+m4.metric("🏆 Başarı", f"%{basari:.0f}")
+
 st.markdown("### 1️⃣ Dersini seç")
 cols = st.columns(4)
 for i, ders in enumerate(KONULAR.keys()):
     with cols[i]:
         if st.button(ders, use_container_width=True,
                      type="primary" if st.session_state.ders==ders else "secondary"):
-            st.session_state.ders = ders
-            st.session_state.soru = None
-            st.session_state.cevap_acik = False
-            st.session_state.cozum_acik = False
-            st.rerun()
+            if st.session_state.ders != ders:
+                st.session_state.ders = ders
+                st.session_state.pop("konu_secimi", None)
+                soruyu_temizle()
+                st.rerun()
 
 st.markdown("### 2️⃣ Konuyu seç")
-konu = st.selectbox("Konu", KONULAR[st.session_state.ders], label_visibility="collapsed")
+konu_secenekleri = {
+    f"{ad} ({konu_soru_sayisi(st.session_state.ders, ad)} soru)": ad
+    for ad in KONULAR[st.session_state.ders]
+}
+konu_etiketi = st.selectbox(
+    "Konu",
+    list(konu_secenekleri),
+    key="konu_secimi",
+    on_change=secim_degisti,
+    label_visibility="collapsed",
+)
+konu = konu_secenekleri[konu_etiketi]
 
 st.markdown("### 3️⃣ Zorluk seviyesini seç")
-zorluk = st.selectbox("Zorluk", ["Kolay","Orta","Zor","Gerçek LGS Seviyesi"],
-                      index=1, label_visibility="collapsed")
+zorluk = st.selectbox(
+    "Zorluk",
+    ["Kolay","Orta","Zor","Gerçek LGS Seviyesi"],
+    index=1,
+    key="zorluk_secimi",
+    on_change=secim_degisti,
+    label_visibility="collapsed",
+)
 
 st.markdown("### 4️⃣ Soru türünü seç")
 c1, c2 = st.columns(2)
@@ -133,10 +177,43 @@ if st.session_state.soru:
     st.markdown("---")
     st.markdown("## 🎯 Soru")
     st.markdown(q.get("soru",""))
-    st.markdown(f"**A)** {q.get('A','')}")
-    st.markdown(f"**B)** {q.get('B','')}")
-    st.markdown(f"**C)** {q.get('C','')}")
-    st.markdown(f"**D)** {q.get('D','')}")
+
+    secilen_cevap = st.radio(
+        "Cevabını işaretle",
+        ["A", "B", "C", "D"],
+        index=None,
+        format_func=lambda harf: f"{harf}) {q.get(harf, '')}",
+        key=f"cevap_{st.session_state.soru_no}",
+        disabled=st.session_state.cevaplandi,
+    )
+
+    if st.button(
+        "✅ Cevabı Kontrol Et",
+        use_container_width=True,
+        type="primary",
+        disabled=st.session_state.cevaplandi or secilen_cevap is None,
+    ):
+        st.session_state.cevaplandi = True
+        if secilen_cevap == q.get("cevap"):
+            st.session_state.dogru += 1
+        else:
+            st.session_state.yanlis += 1
+            soru_kaydi = {
+                "ders": q.get("ders", st.session_state.ders),
+                "konu": q.get("konu", konu),
+                "soru": q.get("soru", ""),
+                "verilen": secilen_cevap,
+                "dogru": q.get("cevap", ""),
+            }
+            if not any(x.get("soru") == soru_kaydi["soru"] for x in st.session_state.yanlislarim):
+                st.session_state.yanlislarim.append(soru_kaydi)
+        st.rerun()
+
+    if st.session_state.cevaplandi:
+        if secilen_cevap == q.get("cevap"):
+            st.success("🎉 Doğru cevap!")
+        else:
+            st.error(f"Yanlış cevap. Doğru seçenek: {q.get('cevap', '')}")
 
     st.markdown("### 🖊️ Çözüm Tahtası")
 
@@ -245,3 +322,14 @@ if st.session_state.soru:
             + '</div>'
         )
         st.markdown(solution_html, unsafe_allow_html=True)
+
+st.markdown("---")
+st.markdown(f"## 📕 Yanlışlarım ({len(st.session_state.yanlislarim)})")
+if not st.session_state.yanlislarim:
+    st.caption("Henüz yanlış cevaplanan soru yok.")
+else:
+    for i, hata in enumerate(reversed(st.session_state.yanlislarim), 1):
+        with st.expander(f"{i}. {hata['ders']} • {hata['konu']}"):
+            st.write(hata["soru"])
+            st.write(f"Senin cevabın: **{hata['verilen']}**")
+            st.write(f"Doğru cevap: **{hata['dogru']}**")
