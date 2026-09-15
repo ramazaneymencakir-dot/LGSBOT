@@ -42,6 +42,10 @@ KONULAR = {
 }
 
 BANKA_DOSYASI = Path(__file__).with_name("questions.json")
+ZORUNLU_ALANLAR = {
+    "id", "ders", "konu", "zorluk", "tur", "soru",
+    "A", "B", "C", "D", "cevap", "cozum", "ipucu",
+}
 
 @st.cache_data
 def soru_bankasini_yukle():
@@ -50,6 +54,33 @@ def soru_bankasini_yukle():
     return json.loads(BANKA_DOSYASI.read_text(encoding="utf-8"))
 
 BANKA = soru_bankasini_yukle()
+
+def soru_bankasini_dogrula(sorular):
+    hatalar = []
+    if not isinstance(sorular, list):
+        return ["questions.json bir JSON listesi olmalıdır."]
+
+    gorulen_idler = set()
+    for sira, soru in enumerate(sorular, 1):
+        if not isinstance(soru, dict):
+            hatalar.append(f"{sira}. kayıt bir nesne değil.")
+            continue
+        eksikler = sorted(alan for alan in ZORUNLU_ALANLAR if not soru.get(alan))
+        if eksikler:
+            hatalar.append(f"{sira}. soruda eksik/boş alan: {', '.join(eksikler)}")
+        soru_id = soru.get("id")
+        if soru_id in gorulen_idler:
+            hatalar.append(f"Tekrarlanan soru kimliği: {soru_id}")
+        elif soru_id:
+            gorulen_idler.add(soru_id)
+        if soru.get("cevap") not in {"A", "B", "C", "D"}:
+            hatalar.append(f"{sira}. sorunun cevabı A, B, C veya D olmalıdır.")
+    return hatalar
+
+BANKA_HATALARI = soru_bankasini_dogrula(BANKA)
+if BANKA_HATALARI:
+    st.error("Soru bankası doğrulanamadı:\n\n- " + "\n- ".join(BANKA_HATALARI))
+    st.stop()
 
 for key, default in {
     "ders": "📐 Matematik",
@@ -62,6 +93,7 @@ for key, default in {
     "dogru": 0,
     "yanlis": 0,
     "yanlislarim": [],
+    "cozulen_havuzlar": {},
 }.items():
     if key not in st.session_state:
         st.session_state[key] = default
@@ -78,13 +110,15 @@ def secim_degisti():
 def konu_soru_sayisi(ders, konu):
     return sum(1 for q in BANKA if q.get("ders") == ders and q.get("konu") == konu)
 
+def havuz_anahtari(ders, konu, zorluk, tur):
+    return " | ".join((ders, konu, zorluk, tur))
+
 def uygun_sorular(ders, konu, zorluk, tur):
-    exact = [q for q in BANKA if q.get("ders")==ders and q.get("konu")==konu
-             and q.get("zorluk")==zorluk and q.get("tur")==tur]
-    if exact:
-        return exact, False
-    fallback = [q for q in BANKA if q.get("ders")==ders and q.get("konu")==konu and q.get("tur")==tur]
-    return fallback, True
+    return [q for q in BANKA if q.get("ders")==ders and q.get("konu")==konu
+            and q.get("zorluk")==zorluk and q.get("tur")==tur]
+
+def cozulmemis_sorular(liste, cozulen_idler):
+    return [q for q in liste if q["id"] not in set(cozulen_idler)]
 
 def rastgele_soru_sec(liste):
     if not liste:
@@ -97,18 +131,27 @@ def rastgele_soru_sec(liste):
     return soru
 
 def soru_getir(tur, konu, zorluk):
-    liste, fallback = uygun_sorular(st.session_state.ders, konu, zorluk, tur)
+    liste = uygun_sorular(st.session_state.ders, konu, zorluk, tur)
     if not liste:
         st.session_state.soru = None
         st.warning(f"Bu seçim için soru bankasında henüz soru yok: {konu} → {zorluk} → {tur}")
         return
-    st.session_state.soru = rastgele_soru_sec(liste)
+    anahtar = havuz_anahtari(st.session_state.ders, konu, zorluk, tur)
+    cozulenler = set(st.session_state.cozulen_havuzlar.get(anahtar, []))
+    kalanlar = cozulmemis_sorular(liste, cozulenler)
+    if not kalanlar:
+        st.session_state.soru = None
+        return
+    st.session_state.soru = rastgele_soru_sec(kalanlar)
     st.session_state.cevap_acik = False
     st.session_state.cozum_acik = False
     st.session_state.cevaplandi = False
     st.session_state.soru_no += 1
-    if fallback:
-        st.info("Bu zorluk seviyesinde henüz soru yok; aynı konudan mevcut başka bir zorluk getirildi.")
+
+def havuzu_yeniden_baslat(ders, konu, zorluk, tur):
+    anahtar = havuz_anahtari(ders, konu, zorluk, tur)
+    st.session_state.cozulen_havuzlar.pop(anahtar, None)
+    soruyu_temizle()
 
 st.markdown('<div class="title">🤖 LGSBOT</div>', unsafe_allow_html=True)
 st.markdown('<div class="founder">KURUCU: RAMAZAN EYMEN ÇAKIR</div>', unsafe_allow_html=True)
@@ -160,16 +203,38 @@ zorluk = st.selectbox(
 )
 
 st.markdown("### 4️⃣ Soru türünü seç")
-c1, c2 = st.columns(2)
-with c1:
-    klasik = st.button("✏️ Klasik Soru", use_container_width=True)
-with c2:
-    lgs = st.button("🎯 LGS Tarzı Soru", use_container_width=True)
+soru_turu = st.radio(
+    "Soru türü",
+    ["Klasik", "LGS Tarzı"],
+    horizontal=True,
+    key="soru_turu_secimi",
+    on_change=secim_degisti,
+    label_visibility="collapsed",
+)
 
-if klasik:
-    soru_getir("Klasik", konu, zorluk)
-if lgs:
-    soru_getir("LGS Tarzı", konu, zorluk)
+secili_havuz = uygun_sorular(st.session_state.ders, konu, zorluk, soru_turu)
+secili_anahtar = havuz_anahtari(st.session_state.ders, konu, zorluk, soru_turu)
+cozulen_idler = set(st.session_state.cozulen_havuzlar.get(secili_anahtar, []))
+kalan_soru_sayisi = sum(q["id"] not in cozulen_idler for q in secili_havuz)
+st.info(
+    f"🔎 Seçili filtrede {len(secili_havuz)} soru bulundu. "
+    f"Kalan soru: {kalan_soru_sayisi}."
+)
+
+if len(secili_havuz) == 1:
+    st.warning("Bu filtrede yalnızca 1 soru var. Farklı soru için filtreyi değiştirmen gerekir.")
+
+if secili_havuz and kalan_soru_sayisi == 0:
+    st.success("🎉 Bu bölümdeki tüm soruları çözdün.")
+    if st.button("🔄 Soruları yeniden başlat", use_container_width=True):
+        havuzu_yeniden_baslat(st.session_state.ders, konu, zorluk, soru_turu)
+        st.rerun()
+elif secili_havuz:
+    if st.button("🎲 Soru Getir", use_container_width=True, type="primary"):
+        soru_getir(soru_turu, konu, zorluk)
+        st.rerun()
+else:
+    st.warning("Bu filtreye uygun soru bulunamadı.")
 
 if st.session_state.soru:
     q = st.session_state.soru
@@ -207,6 +272,10 @@ if st.session_state.soru:
             }
             if not any(x.get("soru") == soru_kaydi["soru"] for x in st.session_state.yanlislarim):
                 st.session_state.yanlislarim.append(soru_kaydi)
+        q_anahtar = havuz_anahtari(q["ders"], q["konu"], q["zorluk"], q["tur"])
+        cozulenler = st.session_state.cozulen_havuzlar.setdefault(q_anahtar, [])
+        if q["id"] not in cozulenler:
+            cozulenler.append(q["id"])
         st.rerun()
 
     if st.session_state.cevaplandi:
@@ -303,7 +372,7 @@ if st.session_state.soru:
         if st.button("🧠 Çözümü Göster", use_container_width=True):
             st.session_state.cozum_acik = True
     with b3:
-        if st.button("🔄 Yeni Soru", use_container_width=True):
+        if st.button("🔄 Yeni Soru", use_container_width=True, disabled=not st.session_state.cevaplandi):
             soru_getir(q.get("tur","Klasik"), konu, zorluk)
             st.rerun()
 
