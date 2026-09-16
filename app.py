@@ -48,8 +48,8 @@ ZORUNLU_ALANLAR = {
     "A", "B", "C", "D", "cevap", "cozum", "ipucu",
 }
 
-@st.cache_data
 def soru_bankasini_yukle():
+    # Deploy sonrasında eski soru bankasının önbellekten dönmesini önle.
     if not BANKA_DOSYASI.exists():
         return []
     return json.loads(BANKA_DOSYASI.read_text(encoding="utf-8"))
